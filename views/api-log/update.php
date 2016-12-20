@@ -5,9 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Log */
 
-$this->title = 'Update Log: ' . $model->_id;
+$this->title = 'Update Log: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Logs', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->_id, 'url' => ['view', 'id' => (string)$model->_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => (string)$model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="log-update">

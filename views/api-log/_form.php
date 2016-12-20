@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, '_id') ?>
+    <?= $form->field($model, 'id') ?>
 
     <?= $form->field($model, 'level') ?>
 

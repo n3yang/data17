@@ -85,7 +85,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         
         return [
             'dat' => [
-                'rows' => $rs['rows'],
+                'rows'  => $rs['rows'],
                 'total' => $rs['total'],
             ],
             'msg' => $rs['msg'],
