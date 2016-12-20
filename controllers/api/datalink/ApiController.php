@@ -94,4 +94,29 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         ];
     }
 
+    public function formatDataBeforeSend($event)
+    {
+        // var_dump(Yii::$app->request->bodyParams);
+        // var_dump(Yii::$app->request->post());
+        // var_dump(Yii::$app->request->get());
+        // var_dump(Yii::$app->request->getBodyParam('apiKey'));
+        // var_dump(Yii::$app->request->userIP);
+        // var_dump(Yii::$app->request->headers);
+        $response = $event->sender;
+        if (is_array($response->data) && $response->statusCode != 200) {
+            // var_dump($response);exit;
+            //unset($response->data['type'], $response->data['status'], $response->data['name']);
+            $error = $response->data['code'] ?: $response->statusCode;
+            $response->data = [
+                'ret'   => $error,
+                'msg'   => $response->data['message'],
+                'dat'   => [],
+                'ver'   => '1',
+            ];
+            $response->statusCode = 200;
+        }
+
+        // log return
+        $this->log->writeAfterApiAction($response->data);
+    }
 }
