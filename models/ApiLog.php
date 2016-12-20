@@ -67,7 +67,7 @@ class ApiLog extends ActiveRecord
     {
         $request = Yii::$app->request;
         $info = [
-            'level'         => Log::LEVEL_INFO,
+            'level'         => ApiLog::LEVEL_INFO,
             'url'           => $request->url,
             'path_info'     => $request->pathInfo,
             'http_header'   => Json::encode($request->getHeaders()),
