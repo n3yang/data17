@@ -4,6 +4,7 @@ namespace app\controllers\api\datalink;
 
 use Yii;
 use yii\web\UnauthorizedHttpException;
+use app\models\User;
 
 
 abstract class ApiController extends \app\controllers\api\v1\ApiController
