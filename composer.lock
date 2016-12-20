@@ -544,54 +544,6 @@
             "time": "2016-02-06 00:49:24"
         },
         {
-            "name": "yiisoft/yii2-mongodb",
-            "version": "2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii2-mongodb.git",
-                "reference": "e36eac274ea445f065cdfa618dac4bd9e067999a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-mongodb/zipball/e36eac274ea445f065cdfa618dac4bd9e067999a",
-                "reference": "e36eac274ea445f065cdfa618dac4bd9e067999a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mongodb": ">=1.0.0",
-                "yiisoft/yii2": ">=2.0.5"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "yii\\mongodb\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Paul Klimov",
-                    "email": "klimov.paul@gmail.com"
-                }
-            ],
-            "description": "MongoDb extension for the Yii framework",
-            "keywords": [
-                "active-record",
-                "mongo",
-                "mongodb",
-                "yii2"
-            ],
-            "time": "2016-06-27 00:53:26"
-        },
-        {
             "name": "yiisoft/yii2-swiftmailer",
             "version": "2.0.5",
             "source": {
