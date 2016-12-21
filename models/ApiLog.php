@@ -66,7 +66,7 @@ class ApiLog extends ActiveRecord
     public function writeBeforeApiAction()
     {
         $request = Yii::$app->request;
-        $post = ($request->getContentType() == 'application/x-www-form-urlencoded')
+        $post = !empty($request->post())
             ? Json::encode($request->post())
             : $request->getRawBody();
         $info = [
