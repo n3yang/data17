@@ -66,16 +66,13 @@ class ApiLog extends ActiveRecord
     public function writeBeforeApiAction()
     {
         $request = Yii::$app->request;
-        $post = !empty($request->post())
-            ? Json::encode($request->post())
-            : $request->getRawBody();
         $info = [
             'level'         => ApiLog::LEVEL_INFO,
             'url'           => $request->url,
             'path_info'     => $request->pathInfo,
             'http_header'   => Json::encode($request->getHeaders()),
             'http_get'      => Json::encode($request->get()),
-            'http_post'     => $post,
+            'http_post'     => Json::encode($request->post()),
             'exec_time'     => 0,
             'ip'            => $request->userIP,
         ];

@@ -67,9 +67,9 @@ class JdwxClient
         $client = new Client;
         $response = $client->get($uri, $query)->send();
         // log raw
-        Yii::$app->controller->log->rawdata = $response->data;
+        Yii::$app->controller->log->rawdata = $response->getContent();
 
-        $data = Json::decode($response);
+        $data = $response->getData();
         // 京东万象接口返回异常状态
         if (empty($data['code']) || $data['code'] != '10000') {
             throw new Exception(
