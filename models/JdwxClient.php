@@ -28,7 +28,7 @@ class JdwxClient
 
 
 
-    public static function getErrorMessage($errorCode)
+    public static function getMessageByErrorCode($errorCode)
     {
         $trans = [
             self::ERROR_INVALID_PARAM       => '输入参数错误',
@@ -67,7 +67,7 @@ class JdwxClient
         $client = new Client;
         $response = $client->get($uri, $query)->send();
         // log raw
-        Yii::$app->controller->log->rawdata = $response;
+        Yii::$app->controller->log->rawdata = $response->data;
 
         $data = Json::decode($response);
         // 京东万象接口返回异常状态
@@ -90,7 +90,7 @@ class JdwxClient
             $data['result']['code'] = '0';
             $data['result']['data']['result'] = 'N';
         }
-        if ($carrier == case MobileSegment::CARRIER_UNICOM) {
+        if ($carrier == MobileSegment::CARRIER_UNICOM) {
             unset($data['result']['data']['isTrue']);
             unset($data['result']['data']['isTrueMsg']);
             $data['result']['data']['result'] = $data['result']['data']['result'] == '00'

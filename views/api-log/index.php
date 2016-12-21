@@ -43,14 +43,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Error',
                 'format' => 'raw', 
                 'value' => function($model){
-                    return $model->output['error'];
+                    $output = Json::decode($model->output);
+                    return $output['error'] ?: null;
                 }
             ],
 
             ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
         ],
         'rowOptions' => function ($model, $key, $index, $grid){
-            $output = Json::decode($model->output);
+            $output = Json::decode($model->output, true);
             if ($output['error'] != '0') {
                 return ['class' => 'warning'];
             } else {

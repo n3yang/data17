@@ -1,4 +1,5 @@
 <?php
+namespace app\models;
 
 /**
 * 手机运营商号段解析

@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Event;
 use yii\web\Response;
 use yii\web\UnauthorizedHttpException;
+use yii\helpers\Json;
 use yii\rest\Controller;
 use yii\filters\ContentNegotiator;
 use app\models\User;
@@ -125,7 +126,7 @@ abstract class ApiController extends Controller
         }
 
         // log return
-        $this->log->writeAfterApiAction($response->data);
+        $this->log->writeAfterApiAction(Json::encode($response->data));
     }
 
     /**

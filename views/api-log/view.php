@@ -39,19 +39,23 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 // 'format' => 'ntext',
                 'attribute' => 'http_get',
-                'value' => var_export($model->http_get, JSON_UNESCAPED_UNICODE)
+                'value' => $model->http_get
             ],
             [
                 'attribute' => 'http_post',
-                'value' => var_export($model->http_post, JSON_UNESCAPED_UNICODE)
+                'value' => $model->http_post
+            ],
+            [
+                'attribute' => 'http_header',
+                'value' => $model->http_header
             ],
             [
                 'attribute' => 'rawdata',
-                'value' => var_export($model->rawdata, JSON_UNESCAPED_UNICODE)
+                'value' => $model->rawdata
             ],
             [
                 'attribute' => 'output',
-                'value' => var_export($model->output, JSON_UNESCAPED_UNICODE)
+                'value' => $model->output
             ],
             'exec_time',
             'ip',

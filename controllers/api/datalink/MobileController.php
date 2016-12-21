@@ -6,7 +6,9 @@ use Yii;
 use Exception;
 use yii\web\BadRequestHttpException;
 use yii\web\ServerErrorHttpException;
+use yii\helpers\Json;
 use app\models\JdwxClient;
+
 
 class MobileController extends ApiController
 {
@@ -29,10 +31,11 @@ class MobileController extends ApiController
     public function actionIdent()
     {
 
-        $dat = Yii::$app->request->getBodyParam('dat');
-        $mobile = $dat['paramlist']['mobile'];
-        $name = $dat['paramlist']['name'];
-        $idcard = $dat['paramlist']['idcard'];
+        $raw = Yii::$app->request->getRawBody();
+        $res = Json::decode($raw);
+        $mobile = $res['dat']['paramlist']['mobile'];
+        $name = $res['dat']['paramlist']['name'];
+        $idcard = $res['dat']['paramlist']['idcard'];
 
         if (empty($mobile) || empty($name) || empty($idcard)) {
             throw new BadRequestHttpException('Invalid Param');

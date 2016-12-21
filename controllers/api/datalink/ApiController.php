@@ -4,6 +4,7 @@ namespace app\controllers\api\datalink;
 
 use Yii;
 use yii\web\UnauthorizedHttpException;
+use yii\helpers\Json;
 use app\models\User;
 
 
@@ -38,14 +39,18 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         }
 
         $query = [
-            'timestamp' => Yii::$app->request->get('timestamp'), // 时间戳。
             'productid' => Yii::$app->request->get('productid'), // 产品编号（UUID）。
-            'nonce'     => Yii::$app->request->get('nonce'), // 平台产生的随机数，可以通过 nonce 接口验证 nonce 是否有效。
             'security'  => Yii::$app->request->get('security'), // 产品是否需要加密，由卖家定义。
-            'appsecret' => Yii::$app->params['datalink']['mpApiKey'],
+            'nonce'     => Yii::$app->request->get('nonce'), // 平台产生的随机数，可以通过 nonce 接口验证 nonce 是否有效。
+            'timestamp' => Yii::$app->request->get('timestamp'), // 时间戳。
+            'appsecret' => Yii::$app->params['datalink']['appSecret'],
         ];
         ksort($query);
         $signString = http_build_query($query);
+        var_dump($signString);
+        var_dump(hash('sha1', $signString));
+        var_dump($sign);
+        exit;
 
         return hash('sha1', $signString) == $sign;
     }
@@ -65,12 +70,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
     public function afterAction($action, $result)
     {
         $rs = parent::afterAction($action, $result);
-
-        // if (empty($rs['data'])) {
-        //     $rs['error'] = self::ERROR_NO_RESULT;
-        //     $rs['data'] = [];
-        //     $rs['message'] = 'Empty Data';
-        // }
+        $rs = $rs['data'];
         
         if ($rs instanceof \Exception) {
             return [
@@ -102,6 +102,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         // var_dump(Yii::$app->request->getBodyParam('apiKey'));
         // var_dump(Yii::$app->request->userIP);
         // var_dump(Yii::$app->request->headers);
+        // var_dump(Yii::$app->request->getRawBody());
         $response = $event->sender;
         if (is_array($response->data) && $response->statusCode != 200) {
             // var_dump($response);exit;
@@ -116,7 +117,9 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
             $response->statusCode = 200;
         }
 
+        // var_dump($response->statusCode);exit;
+
         // log return
-        $this->log->writeAfterApiAction($response->data);
+        $this->log->writeAfterApiAction(Json::encode($response->data));
     }
 }
