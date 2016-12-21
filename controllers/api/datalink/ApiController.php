@@ -111,7 +111,10 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
             $response->data = [
                 'ret'   => $error,
                 'msg'   => $response->data['message'],
-                'dat'   => [],
+                'dat' => [
+                    'rows'  => [],
+                    'total' => 0,
+                ],
                 'ver'   => '1',
             ];
             $response->statusCode = 200;

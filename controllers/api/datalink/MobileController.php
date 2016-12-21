@@ -32,7 +32,7 @@ class MobileController extends ApiController
     {
 
         $raw = Yii::$app->request->getRawBody();
-        $res = Json::decode(stripslashes($raw), true);
+        $res = Json::decode($raw);
         $mobile = $res['dat']['paramlist']['mobile'];
         $name = $res['dat']['paramlist']['name'];
         $idcard = $res['dat']['paramlist']['idcard'];
