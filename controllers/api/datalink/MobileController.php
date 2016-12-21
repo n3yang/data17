@@ -41,11 +41,7 @@ class MobileController extends ApiController
             throw new BadRequestHttpException('Invalid Param');
         }
 
-        try {
-            $rs = JdwxClient::MobileIdent($mobile, $name, $idcard);
-        } catch (Exception $e) {
-            return $e;
-        }
+        $rs = JdwxClient::MobileIdent($mobile, $name, $idcard);
 
         return [
             'rows'      => $rs,

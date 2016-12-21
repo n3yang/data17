@@ -51,12 +51,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
         ],
         'rowOptions' => function ($model, $key, $index, $grid){
-            $output = Json::decode($model->output, true);
-            if ($output['error'] != '0') {
-                return ['class' => 'warning'];
-            } else {
-                return ['class' => 'success'];
-            }
+            // $output = Json::decode($model->output, true);
+            // if ($output['error'] != '0') {
+            //     return ['class' => 'warning'];
+            // } else {
+            //     return ['class' => 'success'];
+            // }
         },
     ]); ?>
 
