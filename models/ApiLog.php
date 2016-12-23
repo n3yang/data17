@@ -13,9 +13,8 @@ use app\models\User;
  */
 class ApiLog extends ActiveRecord
 {
-    const LEVEL_ERROR = 3;
-    const LEVEL_WARNING = 2;
-    const LEVEL_INFO = 1;
+    const VERSION_1 = 'v1';
+    const VERSION_DATALINK = 'datalink';
 
     private $execTimer = '';
     /**
@@ -30,7 +29,7 @@ class ApiLog extends ActiveRecord
     {
         return [
             'id'            => 'ID',
-            'level'         => 'LOG LEVEL',
+            'version'       => 'API VERSION',
             'user_id'       => 'USER ID',
             'url'           => 'URL',
             'path_info'     => 'PATH INFO',
@@ -67,7 +66,7 @@ class ApiLog extends ActiveRecord
     {
         $request = Yii::$app->request;
         $info = [
-            'level'         => ApiLog::LEVEL_INFO,
+            'version'       => ApiLog::VERSION_1,
             'url'           => $request->url,
             'path_info'     => $request->pathInfo,
             'http_header'   => Json::encode($request->getHeaders()),
@@ -78,14 +77,9 @@ class ApiLog extends ActiveRecord
         ];
 
         $this->setAttributes($info, false);
+        $this->execTimer = microtime(true);
 
-        if ($this->save()) {
-            $this->execTimer = microtime(true);
-            
-            return $this;
-        } else {
-            return null;
-        }
+        return $this;
     }
 
     /**
@@ -107,12 +101,5 @@ class ApiLog extends ActiveRecord
         return $this->save();
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getId()
-    {
-        return (string) $this->id;
-    }
 
 }

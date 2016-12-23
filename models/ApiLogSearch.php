@@ -21,7 +21,7 @@ class ApiLogSearch extends ApiLog
     {
         return [
             [['output_error'], 'number'],
-            [['id', 'level', 'user_id', 'url', 'path_info', 'http_get', 'http_post', 'rawdata', 'output', 'exec_time', 'ip', 'created_at', 'updated_at', 'output_error'], 'safe'],
+            [['id', 'version', 'user_id', 'url', 'path_info', 'http_get', 'http_post', 'rawdata', 'output', 'exec_time', 'ip', 'created_at', 'updated_at', 'output_error'], 'safe'],
         ];
     }
 
@@ -62,7 +62,7 @@ class ApiLogSearch extends ApiLog
 
         // grid filtering conditions
         $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'level', $this->level])
+            ->andFilterWhere(['like', 'version', $this->version])
             ->andFilterWhere(['like', 'user_id', $this->user_id])
             ->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'path_info', $this->path_info])

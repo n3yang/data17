@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'created_at:datetime',
             // 'id',
-            // 'level',
+            // 'version',
             'user.username',
             'user_id',
             // 'api_key',
@@ -43,8 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Error',
                 'format' => 'raw', 
                 'value' => function($model){
-                    $output = Json::decode($model->output);
-                    return $output['error'] ?: null;
+                    try {
+                        $data = Json::decode($model->rawdata);
+                    } catch (Exception $e) {
+                        $data = [];
+                    }
+                    return $data['charge'] ?: null;
                 }
             ],
 

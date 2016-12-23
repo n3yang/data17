@@ -5,8 +5,8 @@ namespace app\controllers\api\datalink;
 use Yii;
 use yii\web\UnauthorizedHttpException;
 use yii\helpers\Json;
+use app\models\ApiLog;
 use app\models\User;
-
 
 abstract class ApiController extends \app\controllers\api\v1\ApiController
 {
@@ -102,6 +102,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         }
 
         // log return
+        $this->log->version = ApiLog::VERSION_DATALINK;
         $this->log->writeAfterApiAction(Json::encode($response->data));
     }
 }

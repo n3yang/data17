@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'level',
+            'version',
             'user_id',
             'url',
             'path_info',
