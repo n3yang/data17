@@ -8,6 +8,7 @@ use app\models\ApiLogSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * ApiLogController implements the CRUD actions for ApiLog model.
