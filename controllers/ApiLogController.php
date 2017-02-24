@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\ApiLog;
 use app\models\ApiLogSearch;
+use app\models\User;
+use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -147,5 +149,10 @@ class ApiLogController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    protected function getUser()
+    {
+        return Yii::$app->user->identity;
     }
 }
