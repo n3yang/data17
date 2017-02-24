@@ -22,6 +22,24 @@ class ApiLogController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            if (!$action->controller->getUser()->isAdmin()) {
+                                return false;
+                            }
+                            return true;
+                        },
+                    ],
+                ],
+                'denyCallback' => function ($rule, $action) {
+                    $this->redirect('/');
+                },
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
