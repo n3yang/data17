@@ -5,7 +5,7 @@ namespace app\controllers\api\v1;
 use Yii;
 use yii\base\Event;
 use yii\web\Response;
-use yii\web\UnauthorizedHttpException;
+use yii\base\UserException;
 use yii\helpers\Json;
 use yii\rest\Controller;
 use yii\filters\ContentNegotiator;
@@ -79,11 +79,11 @@ abstract class ApiController extends Controller
 
             // validate sign
             if (!$this->validateApiSign()) {
-                throw new UnauthorizedHttpException('Signature failed', static::ERROR_SIGN_FAILED);
+                throw new UserException('Signature failed', static::ERROR_SIGN_FAILED);
             }
             // validate IP address
             if (!$this->validateIp()) {
-                throw new UnauthorizedHttpException('IP address failed', static::ERROR_SIGN_FAILED);
+                throw new UserException('IP address failed', static::ERROR_SIGN_FAILED);
             }
         }
 
@@ -137,12 +137,12 @@ abstract class ApiController extends Controller
     {
         $apiKey = Yii::$app->request->post('apiKey', Yii::$app->request->get('apiKey'));
         if (!$apiKey) {
-            throw new UnauthorizedHttpException('apiKey is missing', static::ERROR_API_KEY_MISSING);
+            throw new UserException('apiKey is missing', static::ERROR_API_KEY_MISSING);
         }
 
         $identity = User::findByApiKey($apiKey);
         if (!$identity) {
-            throw new UnauthorizedHttpException('User does not exists', static::ERROR_USER_NOT_EXISTS);
+            throw new UserException('User does not exists', static::ERROR_USER_NOT_EXISTS);
         }
         Yii::$app->user->login($identity);
 
@@ -159,7 +159,7 @@ abstract class ApiController extends Controller
 
         $sign = $query['apiSign'];
         if (!$sign) {
-            throw new UnauthorizedHttpException('Signature is missing', static::ERROR_SIGN_MISSING);
+            throw new UserException('Signature is missing', static::ERROR_SIGN_MISSING);
         }
 
         unset($query['apiSign'], $query['apiKey']);

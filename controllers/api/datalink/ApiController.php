@@ -3,7 +3,7 @@
 namespace app\controllers\api\datalink;
 
 use Yii;
-use yii\web\UnauthorizedHttpException;
+use yii\base\UserException;
 use yii\helpers\Json;
 use app\models\ApiLog;
 use app\models\User;
@@ -21,7 +21,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         $apiKey = yii::$app->params['datalink']['userApiKey'];
         $identity = User::findByApiKey($apiKey);
         if (!$identity) {
-            throw new UnauthorizedHttpException('User does not exists', static::ERROR_USER_NOT_EXISTS);
+            throw new UserException('User does not exists', static::ERROR_USER_NOT_EXISTS);
         }
         Yii::$app->user->login($identity);
     }
@@ -35,7 +35,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
 
         $sign = Yii::$app->request->get('sign');
         if (!$sign) {
-            throw new UnauthorizedHttpException('Signature is missing', static::ERROR_SIGN_MISSING);
+            throw new UserException('Signature is missing', static::ERROR_SIGN_MISSING);
         }
 
         $query = [

@@ -5,7 +5,7 @@ use yii;
 // use yii\base\Model;
 use yii\httpclient\Client;
 use yii\helpers\Json;
-use Exception;
+use yii\base\UserException;
 
 /**
  * 
@@ -42,6 +42,7 @@ class JdwxClient
 
     public static function MobileIdent($mobile, $name, $idcard)
     {
+
         $jdUris = array(
             MobileSegment::CARRIER_MOBILE     => 'https://way.jd.com/Yodata/Chinamobile', // 移动三要素认证
             MobileSegment::CARRIER_UNICOM     => 'https://way.jd.com/Yodata/uincom', // 联通三要素认证
@@ -51,7 +52,7 @@ class JdwxClient
         // 不支持该手机号段
         $carrier = MobileSegment::findCarrier($mobile);
         if (!$carrier) {
-            throw new Exception(
+            throw new UserException(
                 self::getMessageByErrorCode(self::ERROR_GET_MOBILE_CARRIER),
                 self::ERROR_GET_MOBILE_CARRIER
             );
@@ -72,7 +73,7 @@ class JdwxClient
         $data = $response->getData();
         // 京东万象接口返回异常状态
         if (empty($data['code']) || $data['code'] != '10000') {
-            throw new Exception(
+            throw new UserException(
                 self::getMessageByErrorCode(self::ERROR_PROCESSING),
                 self::ERROR_PROCESSING
             );
@@ -80,11 +81,12 @@ class JdwxClient
 
         // 数据源返回非计费成功状态
         if ($data['charge'] != true) {
-            throw new Exception(
+            throw new UserException(
                 $data['result']['msg'] ?: self::getMessageByErrorCode(self::ERROR_PURCHASING),
                 self::ERROR_PURCHASING
             );
         }
+        
         // 统一输出
         if ($data['result']['code'] == '200') {
             $data['result']['code'] = '0';

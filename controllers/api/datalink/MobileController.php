@@ -4,8 +4,7 @@ namespace app\controllers\api\datalink;
 
 use Yii;
 use Exception;
-use yii\web\BadRequestHttpException;
-use yii\web\ServerErrorHttpException;
+use yii\base\UserException;
 use yii\helpers\Json;
 use app\models\JdwxClient;
 
@@ -35,7 +34,7 @@ class MobileController extends ApiController
         try {
             $res = Json::decode($raw);
         } catch (Exception $e) {
-            throw new BadRequestHttpException('JSON decoding error.');
+            throw new UserException('JSON decoding error.');
         }
 
         $mobile = $res['dat']['paramlist']['mobile'];
@@ -43,7 +42,7 @@ class MobileController extends ApiController
         $idcard = $res['dat']['paramlist']['idcard'];
 
         if (empty($mobile) || empty($name) || empty($idcard)) {
-            throw new BadRequestHttpException('Invalid Param');
+            throw new UserException('Invalid Param');
         }
 
         $rs = JdwxClient::MobileIdent($mobile, $name, $idcard);
