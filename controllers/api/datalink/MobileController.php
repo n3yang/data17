@@ -32,10 +32,12 @@ class MobileController extends ApiController
     {
 
         $raw = Yii::$app->request->getRawBody();
-        $res = Json::decode($raw);
-        if (empty($res)) {
-            throw new InvalidParamException('JSON decoding error.');
+        try {
+            $res = Json::decode($raw);
+        } catch (Exception $e) {
+            throw new BadRequestHttpException('JSON decoding error.');
         }
+
         $mobile = $res['dat']['paramlist']['mobile'];
         $name = $res['dat']['paramlist']['name'];
         $idcard = $res['dat']['paramlist']['idcard'];
