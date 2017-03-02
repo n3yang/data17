@@ -100,6 +100,9 @@ class JdwxClient
                 : 'F';
         }
 
+        // rebuild serial number
+        unset($data['result']['serialno']);
+
         return $data['result'];
     }
 }
