@@ -71,7 +71,9 @@ class ApiLog extends ActiveRecord
             'path_info'     => $request->pathInfo,
             'http_header'   => Json::encode($request->getHeaders()),
             'http_get'      => Json::encode($request->get()),
-            'http_post'     => Json::encode($request->post()),
+            'http_post'     => $request->getIsPost() && empty($request->post())
+                                ? Json::encode($request->getRawBody()) 
+                                : Json::encode($request->post()),
             'exec_time'     => 0,
             'ip'            => $request->userIP,
         ];
