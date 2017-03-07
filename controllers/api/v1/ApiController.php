@@ -22,11 +22,6 @@ abstract class ApiController extends Controller
     const ERROR_API_KEY_MISSING = 40105;
 
     public $message = '';
-    /**
-     * model log
-     * @var app\models\ApiLog
-     */
-    public $log = '';
 
     public function init()
     {
@@ -69,9 +64,9 @@ abstract class ApiController extends Controller
     public function beforeAction($action)
     {
         // log input
-        $log = new ApiLog;
-        $this->log = $log->writeBeforeApiAction();
-        Yii::$app->params['api'] = &$this->log;
+        $apiLog = new ApiLog;
+        $apiLog->writeBeforeApiAction();
+        Yii::$container->set('apiLog', $apiLog);
 
         if (parent::beforeAction($action)) {
             // validata apiKey
@@ -126,7 +121,8 @@ abstract class ApiController extends Controller
         }
 
         // log return
-        $this->log->writeAfterApiAction(Json::encode($response->data));
+        
+        Yii::$container->get('apiLog')->writeAfterApiAction(Json::encode($response->data));
     }
 
     /**

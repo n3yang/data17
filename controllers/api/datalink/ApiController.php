@@ -102,7 +102,7 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         }
 
         // log return
-        $this->log->version = ApiLog::VERSION_DATALINK;
-        $this->log->writeAfterApiAction(Json::encode($response->data));
+        Yii::$container->get('apiLog')->version = ApiLog::VERSION_DATALINK;
+        Yii::$container->get('apiLog')->writeAfterApiAction(Json::encode($response->data));
     }
 }

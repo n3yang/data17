@@ -58,6 +58,7 @@ class JdwxClient
             );
         }
 
+
         $uri = $jdUris[$carrier];
         $query = [
             'name'      => $name,
@@ -68,9 +69,11 @@ class JdwxClient
         $client = new Client;
         $response = $client->get($uri, $query)->send();
         // log raw
-        Yii::$app->controller->log->rawdata = $response->getContent();
+        Yii::$container->get('apiLog')->rawdata = $response->getContent();
+        $raw = $response->getContent();
 
-        $data = $response->getData();
+
+        $data = Json::decode($raw);
         // 京东万象接口返回异常状态
         if (empty($data['code']) || $data['code'] != '10000') {
             throw new UserException(
