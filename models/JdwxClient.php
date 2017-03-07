@@ -16,6 +16,7 @@ class JdwxClient
 
     const ERROR_INVALID_PARAM = -100000;
     const ERROR_PROCESSING = -100001;
+    const ERROR_NET_STAT = -100002;
     const ERROR_PURCHASING = -200007;
     const ERROR_GET_MOBILE_CARRIER = -200005;
 
@@ -33,6 +34,7 @@ class JdwxClient
         $trans = [
             self::ERROR_INVALID_PARAM       => '输入参数错误',
             self::ERROR_PROCESSING          => '数据源查询错误',
+            self::ERROR_NET_STAT            => '数据源查询错误',
             self::ERROR_PURCHASING          => '数据源查询错误',
             self::ERROR_GET_MOBILE_CARRIER  => '不支持该手机号段',
         ];
@@ -74,7 +76,14 @@ class JdwxClient
                 'appkey'    => Yii::$app->params['jdwx']['apiKey'],
             ];
             $client = new Client;
-            $response = $client->get($uri, $query)->send();
+            try {
+                $response = $client->get($uri, $query)->send();
+            } catch (\Exception $e) {
+                throw new UserException(
+                    self::getMessageByErrorCode(self::ERROR_NET_STAT),
+                    self::ERROR_NET_STAT
+                );
+            }
             $raw = $response->getContent();
             // set cache
             Yii::$app->cache->set($cacheKey, $raw, 3600 * 24 * 7);
