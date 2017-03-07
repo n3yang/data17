@@ -16,6 +16,24 @@ class ApiLog extends ActiveRecord
     const VERSION_1 = 'v1';
     const VERSION_DATALINK = 'datalink';
 
+    /**
+     * 数据不是来自缓存
+     */
+    const CACHE_NO  = 0;
+    /**
+     * 数据来自缓存
+     */
+    const CACHE_YES = 1;
+
+    /**
+     * 不计费
+     */
+    const CHARGE_NO  = 0;
+    /**
+     * 计费
+     */
+    const CHARGE_YES = 1;
+
     private $execTimer = '';
     /**
      * @inheritdoc
@@ -42,6 +60,8 @@ class ApiLog extends ActiveRecord
             'ip'            => 'IP地址',
             'created_at'    => '添加时间',
             'updated_at'    => '更新时间',
+            'cache'         => '使用缓存',
+            'charge'        => '计费',
         ];
     }
 
@@ -103,5 +123,13 @@ class ApiLog extends ActiveRecord
         return $this->save();
     }
 
+    public function setCacheYes()
+    {
+        $this->cache = static::CACHE_YES;
+    }
 
+    public function setChargeYes()
+    {
+        $this->charge = static::CHARGE_YES;
+    }
 }

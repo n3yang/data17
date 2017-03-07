@@ -61,6 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'ip',
             'created_at:datetime',
             // 'updated_at',
+            'cache',
+            'charge',
         ],
     ]) ?>
 

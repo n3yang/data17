@@ -58,21 +58,29 @@ class JdwxClient
             );
         }
 
-
-        $uri = $jdUris[$carrier];
-        $query = [
-            'name'      => $name,
-            'phone'     => $mobile,
-            'idCard'    => $idcard,
-            'appkey'    => Yii::$app->params['jdwx']['apiKey'],
-        ];
-        $client = new Client;
-        $response = $client->get($uri, $query)->send();
+        // get cache
+        $cacheKey = 'JdwxClient::MobileIdent'.$name.$mobile.$idcard;
+        $cacheData = Yii::$app->cache->get($cacheKey);
+        if (!empty($cacheData)) {
+            Yii::$container->get('apiLog')->setCacheYes();
+            $raw = $cacheData;
+        } else {
+            // fetch data
+            $uri = $jdUris[$carrier];
+            $query = [
+                'name'      => $name,
+                'phone'     => $mobile,
+                'idCard'    => $idcard,
+                'appkey'    => Yii::$app->params['jdwx']['apiKey'],
+            ];
+            $client = new Client;
+            $response = $client->get($uri, $query)->send();
+            $raw = $response->getContent();
+            // set cache
+            Yii::$app->cache->set($cacheKey, $raw, 3600 * 24 * 7);
+        }
         // log raw
-        Yii::$container->get('apiLog')->rawdata = $response->getContent();
-        $raw = $response->getContent();
-
-
+        Yii::$container->get('apiLog')->rawdata = $raw;
         $data = Json::decode($raw);
         // 京东万象接口返回异常状态
         if (empty($data['code']) || $data['code'] != '10000') {
@@ -89,6 +97,7 @@ class JdwxClient
                 self::ERROR_PURCHASING
             );
         }
+        Yii::$container->get('apiLog')->setChargeYes();
         
         // 统一输出
         if ($data['result']['code'] == '200') {

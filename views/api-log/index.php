@@ -39,18 +39,20 @@ $this->params['breadcrumbs'][] = $this->title;
             'exec_time',
             // 'ip',
             // 'updated_at',
-            [
-                'label' => 'Error',
-                'format' => 'raw', 
-                'value' => function($model){
-                    try {
-                        $data = Json::decode($model->rawdata);
-                    } catch (Exception $e) {
-                        $data = [];
-                    }
-                    return $data['charge'] ?: null;
-                }
-            ],
+            // [
+            //     'label' => 'Error',
+            //     'format' => 'raw', 
+            //     'value' => function($model){
+            //         try {
+            //             $data = Json::decode($model->rawdata);
+            //         } catch (Exception $e) {
+            //             $data = [];
+            //         }
+            //         return $data['charge'] ?: null;
+            //     }
+            // ],
+            'cache',
+            'charge',
 
             ['class' => 'yii\grid\ActionColumn', 'template' => '{view}'],
         ],
