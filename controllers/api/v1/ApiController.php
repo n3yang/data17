@@ -5,12 +5,12 @@ namespace app\controllers\api\v1;
 use Yii;
 use yii\base\Event;
 use yii\web\Response;
-use yii\base\UserException;
 use yii\helpers\Json;
 use yii\rest\Controller;
 use yii\filters\ContentNegotiator;
-use app\models\User;
 use app\models\ApiLog;
+use app\models\ApiError;
+use app\models\User;
 
 abstract class ApiController extends Controller
 {
@@ -74,11 +74,11 @@ abstract class ApiController extends Controller
 
             // validate sign
             if (!$this->validateApiSign()) {
-                throw new UserException('Signature failed', static::ERROR_SIGN_FAILED);
+                ApiError::throwException(ApiError::CODE_SIGN_FAILED);
             }
             // validate IP address
             if (!$this->validateIp()) {
-                throw new UserException('IP address failed', static::ERROR_SIGN_FAILED);
+                ApiError::throwException(ApiError::CODE_IP_FAILED);
             }
         }
 
@@ -92,7 +92,6 @@ abstract class ApiController extends Controller
     {
         $rs = parent::afterAction($action, $result);
 
-        $output['error'] = 0;
         $output['message'] = $this->message;
         $output['data'] = $rs;
 
@@ -111,10 +110,16 @@ abstract class ApiController extends Controller
         if (is_array($response->data) && $response->statusCode != 200) {
             // var_dump($response);exit;
             //unset($response->data['type'], $response->data['status'], $response->data['name']);
-            $error = $response->data['code'] ?: $response->statusCode;
+            if (!empty($response->data['code'])) {
+                $error = $response->data['code'];
+                $message = $response->data['message'];
+            } else {
+                $error = ApiError::convertHttpException($response->statusCode);
+                $message = ApiError::getMessage();
+            }
             $response->data = [
-                'error'     => intval($error),
-                'message'   => $response->data['message'],
+                'error'     => strval($error),
+                'message'   => $message,
                 'data'      => [],
             ];
             $response->statusCode = 200;
@@ -133,12 +138,12 @@ abstract class ApiController extends Controller
     {
         $apiKey = Yii::$app->request->post('apiKey', Yii::$app->request->get('apiKey'));
         if (!$apiKey) {
-            throw new UserException('apiKey is missing', static::ERROR_API_KEY_MISSING);
+            ApiError::throwException(ApiError::CODE_API_KEY_MISSING);
         }
 
         $identity = User::findByApiKey($apiKey);
         if (!$identity) {
-            throw new UserException('User does not exists', static::ERROR_USER_NOT_EXISTS);
+            ApiError::throwException(ApiError::CODE_USER_NOT_EXISTS);
         }
         Yii::$app->user->login($identity);
 
@@ -155,7 +160,7 @@ abstract class ApiController extends Controller
 
         $sign = $query['apiSign'];
         if (!$sign) {
-            throw new UserException('Signature is missing', static::ERROR_SIGN_MISSING);
+            ApiError::throwException(ApiError::CODE_SIGN_MISSING);
         }
 
         unset($query['apiSign'], $query['apiKey']);
@@ -169,7 +174,7 @@ abstract class ApiController extends Controller
     public function validateIp()
     {
         if (0==1) {
-            throw new \yii\web\ForbiddenHttpException('IP is not allowed', static::ERROR_IP_FAILED);
+            ApiError::throwException(ApiError::CODE_IP_FAILED);
         }
 
         return true;
