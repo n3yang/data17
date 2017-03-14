@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'company',
             'tel',
             'tags',
+            'api_key',
             'api_secret',
             'created_at:datetime',
             'updated_at:datetime',
