@@ -12,7 +12,12 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
 {
 
     const ERROR_NO_RESULT = 20001;
-
+    const ERROR_USER_NOT_EXISTS = 40101;
+    const ERROR_SIGN_MISSING = 40102;
+    const ERROR_SIGN_FAILED = 40103;
+    const ERROR_IP_FAILED = 40104;
+    const ERROR_API_KEY_MISSING = 40105;
+    
     /**
      * @inheritdoc
      */

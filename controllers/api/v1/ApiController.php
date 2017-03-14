@@ -15,12 +15,6 @@ use app\models\User;
 abstract class ApiController extends Controller
 {
 
-    const ERROR_USER_NOT_EXISTS = 40101;
-    const ERROR_SIGN_MISSING = 40102;
-    const ERROR_SIGN_FAILED = 40103;
-    const ERROR_IP_FAILED = 40104;
-    const ERROR_API_KEY_MISSING = 40105;
-
     public $message = '';
 
     public function init()
@@ -92,7 +86,8 @@ abstract class ApiController extends Controller
     {
         $rs = parent::afterAction($action, $result);
 
-        $output['message'] = $this->message;
+        $output['error'] = ApiError::CODE_SUCCESS;
+        $output['message'] = ApiError::getMessage(ApiError::CODE_SUCCESS);
         $output['data'] = $rs;
 
         return $output;
@@ -110,13 +105,8 @@ abstract class ApiController extends Controller
         if (is_array($response->data) && $response->statusCode != 200) {
             // var_dump($response);exit;
             //unset($response->data['type'], $response->data['status'], $response->data['name']);
-            if (!empty($response->data['code'])) {
-                $error = $response->data['code'];
-                $message = $response->data['message'];
-            } else {
-                $error = ApiError::convertHttpException($response->statusCode);
-                $message = ApiError::getMessage();
-            }
+            $error = $response->data['code'] ?: ApiError::convertHttpException($response->statusCode);
+            $message = $response->data['message'] ?: Response::$httpStatuses[$response->statusCode];
             $response->data = [
                 'error'     => strval($error),
                 'message'   => $message,
