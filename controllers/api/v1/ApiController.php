@@ -34,9 +34,12 @@ abstract class ApiController extends Controller
 
         /**
          * register response event: before send
-         * format return data
          */
         Event::on(Response::className(), Response::EVENT_BEFORE_SEND, [$this, 'formatDataBeforeSend']);
+        /**
+         * register response event: after prepare
+         */
+        Event::on(Response::className(), Response::EVENT_AFTER_PREPARE, [$this, 'writeLogAfterPrepare']);
 
     }
 
@@ -114,10 +117,22 @@ abstract class ApiController extends Controller
             ];
             $response->statusCode = 200;
         }
+        // generate serial number
+        $response->data['serial'] = static::generateSerial();
+        // charge or not
+        $response->data['charge'] = Yii::$container->get('apiLog')->charge ? '1' : '0';
 
-        // log return
-        
-        Yii::$container->get('apiLog')->writeAfterApiAction(Json::encode($response->data));
+    }
+
+    /**
+     * save content to api log
+     */
+    public function writeLogAfterPrepare($event)
+    {
+        if (Yii::$container->get('apiLog') instanceof ApiLog) {
+            $response = $event->sender;
+            Yii::$container->get('apiLog')->writeAfterApiAction($response->content);
+        }
     }
 
     /**
@@ -170,5 +185,8 @@ abstract class ApiController extends Controller
         return true;
     }
 
-
+    public static function generateSerial()
+    {
+        return time() . hash('crc32b', uniqid());
+    }
 }

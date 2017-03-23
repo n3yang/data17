@@ -11,13 +11,9 @@ use app\models\User;
 abstract class ApiController extends \app\controllers\api\v1\ApiController
 {
 
-    const ERROR_NO_RESULT = 20001;
     const ERROR_USER_NOT_EXISTS = 40101;
     const ERROR_SIGN_MISSING = 40102;
-    const ERROR_SIGN_FAILED = 40103;
-    const ERROR_IP_FAILED = 40104;
-    const ERROR_API_KEY_MISSING = 40105;
-    
+
     /**
      * @inheritdoc
      */
@@ -60,15 +56,6 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
         return hash('sha1', $signString) == $sign;
     }
 
-    public function beforeAction($action)
-    {
-        if (parent::beforeAction($action)) {
-
-        }
-
-        return true;
-    }
-    
     /**
      * @inheritdoc
      */
@@ -105,9 +92,14 @@ abstract class ApiController extends \app\controllers\api\v1\ApiController
             ];
             $response->statusCode = 200;
         }
+    }
 
-        // log return
+    /**
+     * save content to api log
+     */
+    public function writeLogAfterPrepare($event)
+    {
         Yii::$container->get('apiLog')->version = ApiLog::VERSION_DATALINK;
-        Yii::$container->get('apiLog')->writeAfterApiAction(Json::encode($response->data));
+        parent::writeLogAfterPrepare($event);
     }
 }

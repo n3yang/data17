@@ -34,11 +34,10 @@ class ApiError extends Model
     const CODE_API_KEY_MISSING = '140105';
 
     /**
-     * 130 开头： HTTP 状态错误 的转译
+     * 130 开头： HTTP 状态错误 的转译。 以下为举例，获取匹配 code 须调用 convertHttpException
      */
     const CODE_HTTP_000 = '130000';
     const CODE_HTTP_403 = '130403'; // Forbidden
-    const CODE_HTTP_500 = '130500';
 
     // const CODE_PURCHASING = '-200007';
     // const CODE_GET_MOBILE_CARRIER = '-200005';
