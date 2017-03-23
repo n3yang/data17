@@ -3,10 +3,10 @@
 namespace app\controllers\api\v1;
 
 use Yii;
-use yii\web\BadRequestHttpException;
-use yii\web\ServerErrorHttpException;
+use app\models\ApiError;
 use app\models\Hash;
-use app\models\MobileBackendApi;
+use app\components\JieanApiClient;
+use app\components\JdwxApiClient;
 
 class MobileController extends ApiController
 {
@@ -18,6 +18,40 @@ class MobileController extends ApiController
     public function actionIndex()
     {
         throw new \yii\web\NotFoundHttpException('HAHA');
+    }
+
+    public function actionIdentJiean()
+    {
+        $request = Yii::$app->request;
+        $mobile = $request->post('mobile');
+        $name = $request->post('name');
+        $idcode = $request->post('idcode');;
+
+        if (empty($mobile) || empty($name) || empty($idcode)) {
+            ApiError::throwException(ApiError::CODE_INVALID_PARAM);
+        }
+
+        $j = new JieanApiClient;
+        $rs = $j->MobileIdent($mobile, $name, $idcode);
+
+        return $rs;
+    }
+
+    public function actionIdentJdwx()
+    {
+        $request = Yii::$app->request;
+        $mobile = $request->post('mobile');
+        $name = $request->post('name');
+        $idcode = $request->post('idcode');;
+
+        if (empty($mobile) || empty($name) || empty($idcode)) {
+            ApiError::throwException(ApiError::CODE_INVALID_PARAM);
+        }
+
+        $j = new JdwxApiClient;
+        $rs = $j->MobileIdent($mobile, $name, $idcode);
+
+        return $rs;
     }
 
     /**
@@ -33,23 +67,6 @@ class MobileController extends ApiController
         return ['mobile' => $mobile];
     }
 
-    /**
-     * sketch of mobile
-     * 
-     * @return array 
-     */
-    public function actionSketch($mobile)
-    {
-        $tags = MobileBackendApi::getMobileSketch($mobile);
-        if ($tags == MobileBackendApi::ERROR_INVALID_PARAM) {
-            throw new BadRequestHttpException('Invalid Param');
-        }
-        if ($tags == MobileBackendApi::ERROR_PROCESSING) {
-            throw new ServerErrorHttpException("Error Processing Request");
-        }
-
-        return $tags;
-    }
 
     public function actionPos()
     {
