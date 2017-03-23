@@ -85,8 +85,6 @@ class JdwxClient
                 );
             }
             $raw = $response->getContent();
-            // set cache
-            Yii::$app->cache->set($cacheKey, $raw, 3600 * 24 * 7);
         }
         // log raw
         Yii::$container->get('apiLog')->rawdata = $raw;
@@ -99,6 +97,9 @@ class JdwxClient
             );
         }
 
+        // set cache
+        Yii::$app->cache->set($cacheKey, $raw, 3600 * 24 * 7);
+        
         // 数据源返回非计费成功状态
         if ($data['charge'] != true) {
             throw new UserException(
