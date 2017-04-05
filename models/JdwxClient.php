@@ -96,9 +96,6 @@ class JdwxClient
                 self::ERROR_PROCESSING
             );
         }
-
-        // set cache
-        Yii::$app->cache->set($cacheKey, $raw, 3600 * 24 * 7);
         
         // 数据源返回非计费成功状态
         if ($data['charge'] != true) {
@@ -108,6 +105,9 @@ class JdwxClient
             );
         }
         Yii::$container->get('apiLog')->setChargeYes();
+
+        // set cache
+        Yii::$app->cache->set($cacheKey, $raw, 3600 * 24 * 7);
         
         // 统一输出
         if ($data['result']['code'] == '200') {
